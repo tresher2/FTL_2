@@ -13,13 +13,14 @@ public class game : MonoBehaviour
     [SerializeField]
     Vector2[] rooms_logo_size= { new Vector2(43,29), new Vector2(37,43),new Vector2(41,31),new Vector2(43,35) };
     [SerializeField]
-    GameObject prefab_shield, prefab_energy, prefab_room;
+    GameObject prefab_shield, prefab_energy, prefab_room, prefab_room_mini;
     [SerializeField]
-    Transform shield_pos, reactor_pos;
+    Transform shield_pos, reactor_pos, room_mini_pos;
     [SerializeField]
     TMP_Text oxygen, engine;
     [SerializeField]
     List<GameObject> list_shields, list_energy,list_rooms;
+    int d = 0;
     // 
     void Start()
     {
@@ -57,18 +58,35 @@ public class game : MonoBehaviour
         {
             list_energy[1].SetActive(false);
         }
+        LORD.rooms.Sort();
         for (int i = 1; i < LORD.rooms.Count; i++)
         {
-            GameObject c = Instantiate(prefab_room, Vector3.zero, Quaternion.identity, reactor_pos);
-            c.GetComponent<RectTransform>().localPosition = new Vector2(28+ 68*i, -19);
-            list_rooms.Add(c.transform.GetChild(0).gameObject);
-            c.transform.GetChild(0).gameObject.GetComponent<RawImage>().texture = rooms[LORD.rooms_enabled[i]];
-            c.transform.GetChild(0).GetChild(0).gameObject.GetComponent<RawImage>().texture = rooms_logo[LORD.rooms[i]];
-            c.transform.GetChild(0).GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta= rooms_logo_size[LORD.rooms[i]];
+            if (LORD.rooms[i] >= 4)
+            {
+                Debug.Log(i);
+                Debug.Log(d);
+                GameObject c = Instantiate(prefab_room_mini, Vector3.zero, Quaternion.identity, room_mini_pos);
+                c.GetComponent<RectTransform>().localPosition = new Vector2(-100.5f + 67 * (i-d), 38.5f);
+                list_rooms.Add(c);
+                c.GetComponent<RawImage>().texture = rooms[LORD.rooms_enabled[i]];
+                c.transform.GetChild(0).gameObject.GetComponent<RawImage>().texture = rooms_logo[LORD.rooms[i]];
+                c.transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta = rooms_logo_size[LORD.rooms[i]];
+            }
+            else
+            {
+                d = i+1;
+                GameObject c = Instantiate(prefab_room, Vector3.zero, Quaternion.identity, reactor_pos);
+                c.GetComponent<RectTransform>().localPosition = new Vector2(28 + 68 * i, -19);
+                list_rooms.Add(c.transform.GetChild(0).gameObject);
+                c.transform.GetChild(0).gameObject.GetComponent<RawImage>().texture = rooms[LORD.rooms_enabled[i]];
+                c.transform.GetChild(0).GetChild(0).gameObject.GetComponent<RawImage>().texture = rooms_logo[LORD.rooms[i]];
+                c.transform.GetChild(0).GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta = rooms_logo_size[LORD.rooms[i]];
+            }
         }
         list_rooms[0].GetComponent<RawImage>().texture = rooms[LORD.rooms_enabled[0]];
         list_rooms[0].transform.GetChild(0).gameObject.GetComponent<RawImage>().texture = rooms_logo[LORD.rooms[0]];
         list_rooms[0].transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta = rooms_logo_size[LORD.rooms[0]];
+
 
     }
     /*void spawn_bars(Transform pos, int max, int ot, GameObject prefab, Vector2 coord, Vector2 smeh)
