@@ -11,11 +11,15 @@ public class game : MonoBehaviour
     [SerializeField]
     Texture[] healches, rooms, rooms_logo;
     [SerializeField]
-    Vector2[] rooms_logo_size= { new Vector2(43,29), new Vector2(37,43),new Vector2(41,31),new Vector2(43,35) };
+    Vector2[] rooms_logo_size;
     [SerializeField]
     GameObject prefab_shield, prefab_energy, prefab_room, prefab_room_mini;
     [SerializeField]
     Transform shield_pos, reactor_pos, room_mini_pos;
+    [SerializeField]
+    Transform[] rooms_in_ship;
+    [SerializeField]
+    Color[] colors_rooms;
     [SerializeField]
     TMP_Text oxygen, engine;
     [SerializeField]
@@ -63,8 +67,6 @@ public class game : MonoBehaviour
         {
             if (LORD.rooms[i] >= 4)
             {
-                Debug.Log(i);
-                Debug.Log(d);
                 GameObject c = Instantiate(prefab_room_mini, Vector3.zero, Quaternion.identity, room_mini_pos);
                 c.GetComponent<RectTransform>().localPosition = new Vector2(-100.5f + 67 * (i-d), 38.5f);
                 list_rooms.Add(c);
@@ -82,10 +84,14 @@ public class game : MonoBehaviour
                 c.transform.GetChild(0).GetChild(0).gameObject.GetComponent<RawImage>().texture = rooms_logo[LORD.rooms[i]];
                 c.transform.GetChild(0).GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta = rooms_logo_size[LORD.rooms[i]];
             }
+            rooms_in_ship[LORD.rooms[i]].gameObject.SetActive(true);
+            rooms_in_ship[LORD.rooms[i]].GetChild(0).GetComponent<RawImage>().color = colors_rooms[LORD.rooms_enabled[i]];
         }
         list_rooms[0].GetComponent<RawImage>().texture = rooms[LORD.rooms_enabled[0]];
         list_rooms[0].transform.GetChild(0).gameObject.GetComponent<RawImage>().texture = rooms_logo[LORD.rooms[0]];
         list_rooms[0].transform.GetChild(0).gameObject.GetComponent<RectTransform>().sizeDelta = rooms_logo_size[LORD.rooms[0]];
+        rooms_in_ship[LORD.rooms[0]].gameObject.SetActive(true);
+        rooms_in_ship[LORD.rooms[0]].GetChild(0).GetComponent<RawImage>().color = colors_rooms[LORD.rooms_enabled[0]];
 
 
     }
